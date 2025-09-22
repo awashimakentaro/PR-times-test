@@ -20,13 +20,14 @@ docker run --network host -i private-isu-benchmarker /bin/benchmarker -t http://
 ```
 
 ## 変更内容
-#1 fix/sourcecode
+# 1 fix/sourcecode
   アプリのパスワードハッシュ計算を高速化しました。
 
   - 変更ファイル: `webapp/python/app.py`
   - 変更内容: `digest()` が外部コマンド（`openssl`）ではなく Python 標準の `hashlib.sha512` を使用するように変更
   - 効果: ログイン/登録時のハッシュ計算でサブプロセス起動コストを削減し、ベンチ実行時のスコア改善が期待できます（機能仕様 は不変）
-#2 fix/score
+# 2 fix/score
+スキーマ変更
   - users 認証の最適化
     - `CREATE INDEX idx_users_account_del ON isuconp.users (account_name, del_flg);`
   - comments 取得の最適化
