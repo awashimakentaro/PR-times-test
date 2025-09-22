@@ -4,6 +4,7 @@ import pathlib
 import re
 import shlex
 import subprocess
+import hashlib
 import tempfile
 
 import flask
@@ -103,13 +104,8 @@ def validate_user(account_name: str, password: str):
 
 
 def digest(src: str):
-    # opensslのバージョンによっては (stdin)= というのがつくので取る
-    out = subprocess.check_output(
-        f"printf %s {shlex.quote(src)} | openssl dgst -sha512 | sed 's/^.*= //'",
-        shell=True,
-        encoding="utf-8",
-    )
-    return out.strip()
+    # 高速化: 外部コマンドではなく標準ライブラリでSHA-512を計算
+    return hashlib.sha512(src.encode("utf-8")).hexdigest()
 
 
 def calculate_salt(account_name: str):
